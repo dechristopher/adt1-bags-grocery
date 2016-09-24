@@ -2,5 +2,6 @@ package edu.wit.cs.comp2000.group24.adt1.grocery;
 
 public enum PERISHABILITY {
 	NONPERISHABLE,
-	PERISHABLE
+	PERISHABLE,
+	NONE
 }

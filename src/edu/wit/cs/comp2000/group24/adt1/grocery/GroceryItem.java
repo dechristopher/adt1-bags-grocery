@@ -19,6 +19,16 @@ public class GroceryItem {
 		this.perishability = p;
 	}
 	
+	public GroceryItem(String n, SIZE s, WEIGHT w, HARDNESS h, RIGIDITY r, BREAKABILITY b){
+		this.name = n;
+		this.size = s;
+		this.weight = w;
+		this.hardness = h;
+		this.rigidity = r;
+		this.breakability = b;
+		this.perishability = PERISHABILITY.NONE;
+	}
+	
 	public String getName(){
 		return this.name;
 	}

@@ -12,7 +12,7 @@ public class Grocery {
 		LinkedBag<GroceryItem> bagPerishable = new LinkedBag<>();
 		LinkedBag<GroceryItem> bagNonPerishable = new LinkedBag<>();
 
-		ArrayList<GroceryItem> items = fillGroceryList("groceries-1.txt");
+		ArrayList<GroceryItem> items = fillGroceryList("groceries-2.txt");
 
 		sortItems(items, bagPerishable, bagNonPerishable);
 
@@ -23,9 +23,7 @@ public class Grocery {
 
 		try {
 			Scanner fin = new Scanner(new File(filename));
-			int itemCount = 1;
 			while (fin.hasNextLine()) {
-				System.out.println("New grocery: " + itemCount);
 
 				String[] line = fin.nextLine().split("	");
 
@@ -39,7 +37,6 @@ public class Grocery {
 
 				GroceryItem item = parseLine(n, s, w, h, r, b, p);
 				items.add(item);
-				itemCount++;
 			}
 			
 			/*for(GroceryItem item : items){
@@ -62,7 +59,7 @@ public class Grocery {
 		BREAKABILITY breakability = BREAKABILITY.valueOf(b.toUpperCase());
 		PERISHABILITY perishability = PERISHABILITY.valueOf(p.toUpperCase());
 
-		System.out.println(n + " " + s + " " + w + " " + h + " " + r + " " + b + " " + p);
+		System.out.println("New Grocery: " + n + " - " + s + " " + w + " " + h + " " + r + " " + b + " " + p);
 
 		return new GroceryItem(n, size, weight, hardness, rigidity, breakability, perishability);
 	}
@@ -72,19 +69,26 @@ public class Grocery {
 		ArrayList<GroceryItem> mediumItems = getMediumItems(items);
 		ArrayList<GroceryItem> heavyItems = getHeavyItems(items);
 		
-		System.out.println("LIGHT: " + lightItems.size() + " MEDIUM: " + mediumItems.size() + " HEAVY: " + heavyItems.size());
+		//System.out.println("LIGHT: " + lightItems.size() + " MEDIUM: " + mediumItems.size() + " HEAVY: " + heavyItems.size());
 		
 		//WEIGHT -> breakability
 		
+		System.out.println("=========================================================================");
+		System.out.println("Sorting");
+		
 		fillBag(bagPerishable, bagNonPerishable, lightItems, mediumItems, heavyItems);
 		
-		System.out.println("NonPerishables");
+		System.out.println("=========================================================================");
+		System.out.println("Non Perishables Bag");
+		System.out.println("=========================================================================");
 		GroceryItem[] nonPerishableArray = (GroceryItem[])bagNonPerishable.toArray(new GroceryItem[0]);
 		for(GroceryItem i : nonPerishableArray){
 			System.out.println(i.getName().toString());
 		}
 		
-		System.out.println("Perishables");
+		System.out.println("=========================================================================");
+		System.out.println("Perishables Bag");
+		System.out.println("=========================================================================");
 		GroceryItem[] perishableArray = (GroceryItem[])bagPerishable.toArray(new GroceryItem[0]);
 		for(GroceryItem i : perishableArray){
 			System.out.println(i.getName().toString());
@@ -96,10 +100,8 @@ public class Grocery {
 		
 		for(GroceryItem i : heavyItems){
 			if(i.getPerishability() == PERISHABILITY.PERISHABLE){
-				//Fill perishable bag with heavies
 					bagPerishable.add(i);
 			}else{
-				//Fill nonPerishable bag with heavies
 					bagNonPerishable.add(i);
 			}
 		}
