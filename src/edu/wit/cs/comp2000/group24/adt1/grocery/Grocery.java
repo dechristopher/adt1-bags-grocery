@@ -12,7 +12,7 @@ public class Grocery {
 		LinkedBag<GroceryItem> bagPerishable = new LinkedBag<>();
 		LinkedBag<GroceryItem> bagNonPerishable = new LinkedBag<>();
 
-		ArrayList<GroceryItem> items = fillGroceryList("groceries-2.txt");
+		ArrayList<GroceryItem> items = fillGroceryList("groceries-1.txt");
 
 		sortItems(items, bagPerishable, bagNonPerishable);
 
