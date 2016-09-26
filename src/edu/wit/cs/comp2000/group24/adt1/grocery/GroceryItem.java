@@ -9,6 +9,16 @@ public class GroceryItem {
 	private BREAKABILITY breakability;
 	private PERISHABILITY perishability;
 	
+	public GroceryItem(){
+		this.name = "";
+		this.size = SIZE.NONE;
+		this.weight = WEIGHT.NONE;
+		this.hardness = HARDNESS.NONE;
+		this.rigidity = RIGIDITY.NONE;
+		this.breakability = BREAKABILITY.NONE;
+		this.perishability = PERISHABILITY.NONE;
+	}
+	
 	public GroceryItem(String n, SIZE s, WEIGHT w, HARDNESS h, RIGIDITY r, BREAKABILITY b, PERISHABILITY p){
 		this.name = n;
 		this.size = s;
@@ -17,16 +27,6 @@ public class GroceryItem {
 		this.rigidity = r;
 		this.breakability = b;
 		this.perishability = p;
-	}
-	
-	public GroceryItem(String n, SIZE s, WEIGHT w, HARDNESS h, RIGIDITY r, BREAKABILITY b){
-		this.name = n;
-		this.size = s;
-		this.weight = w;
-		this.hardness = h;
-		this.rigidity = r;
-		this.breakability = b;
-		this.perishability = PERISHABILITY.NONE;
 	}
 	
 	public String getName(){
@@ -55,6 +55,34 @@ public class GroceryItem {
 	
 	public PERISHABILITY getPerishability(){
 		return this.perishability;
+	}
+	
+	public void setName(String n){
+		this.name = n;
+	}
+	
+	public void setSize(SIZE s){
+		this.size = s;
+	}
+	
+	public void setWeight(WEIGHT w){
+		this.weight = w;
+	}
+	
+	public void setHardness(HARDNESS h){
+		this.hardness = h;
+	}
+	
+	public void setRigidity(RIGIDITY r){
+		this.rigidity = r;
+	}
+	
+	public void setBreakability(BREAKABILITY b){
+		this.breakability = b;
+	}
+	
+	public void setPerishability(PERISHABILITY p){
+		this.perishability = p;
 	}
 }
 

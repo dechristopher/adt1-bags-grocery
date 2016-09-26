@@ -5,10 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Grocery {
+public class Grocery_LinkedBag {
 
 	public static void main(String[] args) {
-
 		LinkedBag<GroceryItem> bagPerishable = new LinkedBag<>();
 		LinkedBag<GroceryItem> bagNonPerishable = new LinkedBag<>();
 
@@ -22,7 +21,6 @@ public class Grocery {
 		ArrayList<GroceryItem> items = fillGroceryList(file);
 
 		sortItems(items, bagPerishable, bagNonPerishable);
-
 	}
 
 	/**
@@ -42,62 +40,47 @@ public class Grocery {
 
 				String[] line = fin.nextLine().split("	");
 
-				String n = line[0];
-				String s = line[1];
-				String w = line[2];
-				String h = line[3];
-				String r = line[4];
-				String b = line[5];
-				String p = line[6];
+				GroceryItem item = new GroceryItem();
 
-				GroceryItem item = parseLine(n, s, w, h, r, b, p);
+				for (String property : line) {
+					parseProperty(item, property);
+				}
+
 				items.add(item);
 			}
 
-			/*
-			 * for(GroceryItem item : items){
-			 * System.out.println(item.getWeight().toString()); }
-			 */
-
 			fin.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			System.out.println(filename + " does not exist! Program exiting.");
+			System.exit(1);
 		}
 
 		return items;
 	}
 
 	/**
-	 * Parses all properties of the grocery in a line of the grocery list and
-	 * instantiates a grocery object
+	 * Changes properties of a given grocery based on the actual property value given
 	 * 
-	 * @param n
-	 *            name
-	 * @param s
-	 *            size
-	 * @param w
-	 *            weight
-	 * @param h
-	 *            hardness
-	 * @param r
-	 *            rigidity
-	 * @param b
-	 *            breakability
-	 * @param p
-	 *            perishability
-	 * @return instantiated GroceryItem object
+	 * @param item GriveryItem to change property of
+	 * @param property String property
 	 */
-	public static GroceryItem parseLine(String n, String s, String w, String h, String r, String b, String p) {
-		SIZE size = SIZE.valueOf(s.toUpperCase());
-		WEIGHT weight = WEIGHT.valueOf(w.toUpperCase());
-		HARDNESS hardness = HARDNESS.valueOf(h.toUpperCase());
-		RIGIDITY rigidity = RIGIDITY.valueOf(r.toUpperCase());
-		BREAKABILITY breakability = BREAKABILITY.valueOf(b.toUpperCase());
-		PERISHABILITY perishability = PERISHABILITY.valueOf(p.toUpperCase());
-
-		System.out.println("New Grocery: " + n + " - " + s + " " + w + " " + h + " " + r + " " + b + " " + p);
-
-		return new GroceryItem(n, size, weight, hardness, rigidity, breakability, perishability);
+	private static void parseProperty(GroceryItem item, String property) {
+		if (property.equals("small") || property.equals("medium") || property.equals("large")) {
+			item.setSize(SIZE.valueOf(property.toUpperCase()));
+		} else if (property.equals("light") || property.equals("moderate") || property.equals("heavy")) {
+			item.setWeight(WEIGHT.valueOf(property.toUpperCase()));
+		} else if (property.equals("soft") || property.equals("firm") || property.equals("hard")) {
+			item.setHardness(HARDNESS.valueOf(property.toUpperCase()));
+		} else if (property.equals("flexible") || property.equals("rigid")) {
+			item.setRigidity(RIGIDITY.valueOf(property.toUpperCase()));
+		} else if (property.equals("breakable") || property.equals("nonbreakable")) {
+			item.setBreakability(BREAKABILITY.valueOf(property.toUpperCase()));
+		} else if (property.equals("perishable") || property.equals("nonperishable")) {
+			item.setPerishability(PERISHABILITY.valueOf(property.toUpperCase()));
+		} else {
+			item.setName(property);
+		}
 	}
 
 	/**
@@ -255,7 +238,7 @@ public class Grocery {
 		ArrayList<GroceryItem> mediumItems = new ArrayList<>();
 
 		for (GroceryItem item : items) {
-			if (item.getWeight() == WEIGHT.MEDIUM) {
+			if (item.getWeight() == WEIGHT.MODERATE) {
 				mediumItems.add(item);
 			}
 		}
