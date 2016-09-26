@@ -12,12 +12,27 @@ public class Grocery {
 		LinkedBag<GroceryItem> bagPerishable = new LinkedBag<>();
 		LinkedBag<GroceryItem> bagNonPerishable = new LinkedBag<>();
 
-		ArrayList<GroceryItem> items = fillGroceryList("groceries-1.txt");
+		Scanner input = new Scanner(System.in);
+
+		System.out.print("Grocery list filename: ");
+		String file = input.nextLine();
+
+		input.close();
+
+		ArrayList<GroceryItem> items = fillGroceryList(file);
 
 		sortItems(items, bagPerishable, bagNonPerishable);
 
 	}
 
+	/**
+	 * Takes the grocery list file and parses all entries into an ArrayList of
+	 * GroceryItem objects.
+	 * 
+	 * @param filename
+	 * @return ArrayList<GroceryItem> containing all the grocery items from the
+	 *         list
+	 */
 	public static ArrayList<GroceryItem> fillGroceryList(String filename) {
 		ArrayList<GroceryItem> items = new ArrayList<>();
 
@@ -38,10 +53,11 @@ public class Grocery {
 				GroceryItem item = parseLine(n, s, w, h, r, b, p);
 				items.add(item);
 			}
-			
-			/*for(GroceryItem item : items){
-				System.out.println(item.getWeight().toString());
-			}*/
+
+			/*
+			 * for(GroceryItem item : items){
+			 * System.out.println(item.getWeight().toString()); }
+			 */
 
 			fin.close();
 		} catch (FileNotFoundException e) {
@@ -51,6 +67,26 @@ public class Grocery {
 		return items;
 	}
 
+	/**
+	 * Parses all properties of the grocery in a line of the grocery list and
+	 * instantiates a grocery object
+	 * 
+	 * @param n
+	 *            name
+	 * @param s
+	 *            size
+	 * @param w
+	 *            weight
+	 * @param h
+	 *            hardness
+	 * @param r
+	 *            rigidity
+	 * @param b
+	 *            breakability
+	 * @param p
+	 *            perishability
+	 * @return instantiated GroceryItem object
+	 */
 	public static GroceryItem parseLine(String n, String s, String w, String h, String r, String b, String p) {
 		SIZE size = SIZE.valueOf(s.toUpperCase());
 		WEIGHT weight = WEIGHT.valueOf(w.toUpperCase());
@@ -64,132 +100,185 @@ public class Grocery {
 		return new GroceryItem(n, size, weight, hardness, rigidity, breakability, perishability);
 	}
 
-	public static void sortItems(ArrayList<GroceryItem> items, LinkedBag<GroceryItem> bagPerishable, LinkedBag<GroceryItem> bagNonPerishable) {
+	/**
+	 * Sorts items from items ArrayList into separate weight classes and then
+	 * into their respective bags based on breakabiltiy and perishability from
+	 * there
+	 * 
+	 * @param items
+	 *            ArrayList<GroceryItem> all of the groceries in the list
+	 * @param bagPerishable
+	 *            LinkedBag<GroceryItem> the bag that will contain all of the
+	 *            perishable items
+	 * @param bagNonPerishable
+	 *            LinkedBag<GroceryItem> the bag that will contain all of the
+	 *            perishable items
+	 */
+	public static void sortItems(ArrayList<GroceryItem> items, LinkedBag<GroceryItem> bagPerishable,
+			LinkedBag<GroceryItem> bagNonPerishable) {
 		ArrayList<GroceryItem> lightItems = getLightItems(items);
 		ArrayList<GroceryItem> mediumItems = getMediumItems(items);
 		ArrayList<GroceryItem> heavyItems = getHeavyItems(items);
-		
-		//System.out.println("LIGHT: " + lightItems.size() + " MEDIUM: " + mediumItems.size() + " HEAVY: " + heavyItems.size());
-		
-		//WEIGHT -> breakability
-		
+
+		// System.out.println("LIGHT: " + lightItems.size() + " MEDIUM: " +
+		// mediumItems.size() + " HEAVY: " + heavyItems.size());
+
+		// WEIGHT -> breakability
+
 		System.out.println("=========================================================================");
 		System.out.println("Sorting");
-		
+
 		fillBag(bagPerishable, bagNonPerishable, lightItems, mediumItems, heavyItems);
-		
+
 		System.out.println("=========================================================================");
 		System.out.println("Non Perishables Bag");
 		System.out.println("=========================================================================");
-		GroceryItem[] nonPerishableArray = (GroceryItem[])bagNonPerishable.toArray(new GroceryItem[0]);
-		for(GroceryItem i : nonPerishableArray){
+		GroceryItem[] nonPerishableArray = (GroceryItem[]) bagNonPerishable.toArray(new GroceryItem[0]);
+		for (GroceryItem i : nonPerishableArray) {
 			System.out.println(i.getName().toString());
 		}
-		
+
 		System.out.println("=========================================================================");
 		System.out.println("Perishables Bag");
 		System.out.println("=========================================================================");
-		GroceryItem[] perishableArray = (GroceryItem[])bagPerishable.toArray(new GroceryItem[0]);
-		for(GroceryItem i : perishableArray){
+		GroceryItem[] perishableArray = (GroceryItem[]) bagPerishable.toArray(new GroceryItem[0]);
+		for (GroceryItem i : perishableArray) {
 			System.out.println(i.getName().toString());
 		}
 	}
 
-	private static void fillBag(LinkedBag<GroceryItem> bagPerishable, LinkedBag<GroceryItem> bagNonPerishable, ArrayList<GroceryItem> lightItems,
-			ArrayList<GroceryItem> mediumItems, ArrayList<GroceryItem> heavyItems) {
-		
-		for(GroceryItem i : heavyItems){
-			if(i.getPerishability() == PERISHABILITY.PERISHABLE){
-					bagPerishable.add(i);
-			}else{
-					bagNonPerishable.add(i);
-			}
-		}
-		
-		for(GroceryItem i : mediumItems){
-			if(i.getPerishability() == PERISHABILITY.PERISHABLE && i.getBreakability() == BREAKABILITY.NONBREAKABLE){
+	/**
+	 * Actually fill the bags with the separated item arrayLists: heavies first,
+	 * then mediums, then lights and breakables
+	 * 
+	 * @param bagPerishable
+	 *            LinkedBag<GroceryItem> that will contain perishable items
+	 * @param bagNonPerishable
+	 *            LinkedBag<GroceryItem> that will contain nonperishable items
+	 * @param lightItems
+	 *            ArrayList<GroceryItem> all light weight groceries
+	 * @param mediumItems
+	 *            ArrayList<GroceryItem> all medium weight groceries
+	 * @param heavyItems
+	 *            ArrayList<GroceryItem> all heavy weight groceries
+	 */
+	private static void fillBag(LinkedBag<GroceryItem> bagPerishable, LinkedBag<GroceryItem> bagNonPerishable,
+			ArrayList<GroceryItem> lightItems, ArrayList<GroceryItem> mediumItems, ArrayList<GroceryItem> heavyItems) {
+
+		for (GroceryItem i : heavyItems) {
+			if (i.getPerishability() == PERISHABILITY.PERISHABLE) {
 				bagPerishable.add(i);
-			}
-		}
-		
-		for(GroceryItem i : mediumItems){
-			if(i.getPerishability() == PERISHABILITY.PERISHABLE && i.getBreakability() == BREAKABILITY.BREAKABLE){
-				bagPerishable.add(i);
-			}
-		}
-		
-		for(GroceryItem i : mediumItems){
-			if(i.getPerishability() == PERISHABILITY.NONPERISHABLE && i.getBreakability() == BREAKABILITY.NONBREAKABLE){
+			} else {
 				bagNonPerishable.add(i);
 			}
 		}
-		
-		for(GroceryItem i : mediumItems){
-			if(i.getPerishability() == PERISHABILITY.NONPERISHABLE && i.getBreakability() == BREAKABILITY.BREAKABLE){
-				bagNonPerishable.add(i);
-			}
-		}
-		
-		for(GroceryItem i : lightItems){
-			if(i.getPerishability() == PERISHABILITY.PERISHABLE && i.getBreakability() == BREAKABILITY.NONBREAKABLE){
+
+		for (GroceryItem i : mediumItems) {
+			if (i.getPerishability() == PERISHABILITY.PERISHABLE && i.getBreakability() == BREAKABILITY.NONBREAKABLE) {
 				bagPerishable.add(i);
 			}
 		}
-		
-		for(GroceryItem i : lightItems){
-			if(i.getPerishability() == PERISHABILITY.PERISHABLE && i.getBreakability() == BREAKABILITY.BREAKABLE){
+
+		for (GroceryItem i : mediumItems) {
+			if (i.getPerishability() == PERISHABILITY.PERISHABLE && i.getBreakability() == BREAKABILITY.BREAKABLE) {
 				bagPerishable.add(i);
 			}
 		}
-		
-		for(GroceryItem i : lightItems){
-			if(i.getPerishability() == PERISHABILITY.NONPERISHABLE && i.getBreakability() == BREAKABILITY.NONBREAKABLE){
+
+		for (GroceryItem i : mediumItems) {
+			if (i.getPerishability() == PERISHABILITY.NONPERISHABLE
+					&& i.getBreakability() == BREAKABILITY.NONBREAKABLE) {
 				bagNonPerishable.add(i);
 			}
 		}
-		
-		for(GroceryItem i : lightItems){
-			if(i.getPerishability() == PERISHABILITY.NONPERISHABLE && i.getBreakability() == BREAKABILITY.BREAKABLE){
+
+		for (GroceryItem i : mediumItems) {
+			if (i.getPerishability() == PERISHABILITY.NONPERISHABLE && i.getBreakability() == BREAKABILITY.BREAKABLE) {
 				bagNonPerishable.add(i);
 			}
 		}
-		
-		
+
+		for (GroceryItem i : lightItems) {
+			if (i.getPerishability() == PERISHABILITY.PERISHABLE && i.getBreakability() == BREAKABILITY.NONBREAKABLE) {
+				bagPerishable.add(i);
+			}
+		}
+
+		for (GroceryItem i : lightItems) {
+			if (i.getPerishability() == PERISHABILITY.PERISHABLE && i.getBreakability() == BREAKABILITY.BREAKABLE) {
+				bagPerishable.add(i);
+			}
+		}
+
+		for (GroceryItem i : lightItems) {
+			if (i.getPerishability() == PERISHABILITY.NONPERISHABLE
+					&& i.getBreakability() == BREAKABILITY.NONBREAKABLE) {
+				bagNonPerishable.add(i);
+			}
+		}
+
+		for (GroceryItem i : lightItems) {
+			if (i.getPerishability() == PERISHABILITY.NONPERISHABLE && i.getBreakability() == BREAKABILITY.BREAKABLE) {
+				bagNonPerishable.add(i);
+			}
+		}
+
 	}
 
+	/**
+	 * Separate light weight items from all items into their own ArrayList
+	 * 
+	 * @param items
+	 *            ArrayList<GroceryItem> all grocery items
+	 * @return ArrayList<GroceryItem> all light weight items
+	 */
 	public static ArrayList<GroceryItem> getLightItems(ArrayList<GroceryItem> items) {
 		ArrayList<GroceryItem> lightItems = new ArrayList<>();
-		
-		for(GroceryItem item : items){
-			if(item.getWeight() == WEIGHT.LIGHT){
+
+		for (GroceryItem item : items) {
+			if (item.getWeight() == WEIGHT.LIGHT) {
 				lightItems.add(item);
 			}
 		}
-		
+
 		return lightItems;
 	}
-	
+
+	/**
+	 * Separate medium weight items from all items into their own ArrayList
+	 * 
+	 * @param items
+	 *            ArrayList<GroceryItem> all grocery items
+	 * @return ArrayList<GroceryItem> all medium weight items
+	 */
 	public static ArrayList<GroceryItem> getMediumItems(ArrayList<GroceryItem> items) {
 		ArrayList<GroceryItem> mediumItems = new ArrayList<>();
-		
-		for(GroceryItem item : items){
-			if(item.getWeight() == WEIGHT.MEDIUM){
+
+		for (GroceryItem item : items) {
+			if (item.getWeight() == WEIGHT.MEDIUM) {
 				mediumItems.add(item);
 			}
 		}
-		
+
 		return mediumItems;
 	}
-	
+
+	/**
+	 * Separate heavy weight items from all items into their own ArrayList
+	 * 
+	 * @param items
+	 *            ArrayList<GroceryItem> all grocery items
+	 * @return ArrayList<GroceryItem> all heavy weight items
+	 */
 	public static ArrayList<GroceryItem> getHeavyItems(ArrayList<GroceryItem> items) {
 		ArrayList<GroceryItem> heavyItems = new ArrayList<>();
-		
-		for(GroceryItem item : items){
-			if(item.getWeight() == WEIGHT.HEAVY){
+
+		for (GroceryItem item : items) {
+			if (item.getWeight() == WEIGHT.HEAVY) {
 				heavyItems.add(item);
 			}
 		}
-		
+
 		return heavyItems;
 	}
 
