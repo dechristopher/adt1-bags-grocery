@@ -60,10 +60,13 @@ public class Grocery_ArrayBag {
 	}
 
 	/**
-	 * Changes properties of a given grocery based on the actual property value given
+	 * Changes properties of a given grocery based on the actual property value
+	 * given
 	 * 
-	 * @param item GriveryItem to change property of
-	 * @param property String property
+	 * @param item
+	 *            GriveryItem to change property of
+	 * @param property
+	 *            String property
 	 */
 	private static void parseProperty(GroceryItem item, String property) {
 		if (property.equals("small") || property.equals("medium") || property.equals("large")) {
