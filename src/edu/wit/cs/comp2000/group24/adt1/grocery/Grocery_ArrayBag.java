@@ -45,6 +45,8 @@ public class Grocery_ArrayBag {
 				for (String property : line) {
 					parseProperty(item, property);
 				}
+				
+				System.out.println("NEW ITEM: \"" + item.getName() + "\" : " + item.getSize() + " : " + item.getWeight() + " : " + item.getHardness() + " : " + item.getRigidity() + " : " + item.getBreakability() + " : " + item.getPerishability());
 
 				items.add(item);
 			}
